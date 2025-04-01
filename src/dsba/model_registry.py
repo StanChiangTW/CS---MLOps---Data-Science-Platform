@@ -35,6 +35,13 @@ def list_models_ids() -> list[str]:
     return models_ids
 
 
+#creation of function which lists the datasets
+# DATASET_DIR = "data"
+# def list_datasets():
+#         datasets = [f for f in os.listdir(DATASET_DIR) if f.endswith(".csv")]
+#         return datasets
+
+
 def load_model(model_id) -> BaseEstimator:
     model_path = _get_model_path(model_id)
     return _load_model_from_path(model_path)

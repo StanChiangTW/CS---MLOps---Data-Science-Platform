@@ -1,8 +1,10 @@
 import json
 import logging
 from fastapi import FastAPI, HTTPException
-from dsba.model_registry import list_models_ids, load_model, load_model_metadata
+from dsba.model_registry import list_models_ids, load_model, load_model_metadata, list_datasets
 from dsba.model_prediction import classify_record
+import os
+import pandas as pd
 
 
 logging.basicConfig(
@@ -20,6 +22,12 @@ app = FastAPI()
 @app.get("/models/")
 async def list_models():
     return list_models_ids()
+
+#TO BE FINISHED: FUNCTION IN dsba.model_registry
+@app.get("/datasets/")
+async def list_available_datasets():
+    return list_datasets()
+
 
 
 @app.api_route("/predict/", methods=["GET", "POST"])
