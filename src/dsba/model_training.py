@@ -10,7 +10,7 @@ import pandas as pd
 from datetime import datetime
 from sklearn.model_selection import GridSearchCV
 from sklearn.base import ClassifierMixin
-from dsba.model_registry import ClassifierMetadata
+from model_registry import ClassifierMetadata
 
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
@@ -19,7 +19,7 @@ import lightgbm as lgb
 
 # Training function for SVM Classifier
 def train_svm_classifier(
-    X = pd.DataFrame, y = pd.Series, model_id: str
+    X = pd.DataFrame, y = pd.Series, model_id: str = None
 ) -> tuple[ClassifierMixin, ClassifierMetadata]:
     logging.info("Start training a SVM Classfier with hyperparameter tuning")
 
@@ -68,7 +68,7 @@ def train_svm_classifier(
 
 # Training function for Random Forest Classifier
 def train_rfc_classifier(
-    X: pd.DataFrame, y: pd.Series, model_id: str
+    X: pd.DataFrame, y: pd.Series, model_id: str = None
 ) -> tuple[ClassifierMixin, ClassifierMetadata]:
     logging.info("Start training a random forest classifier with hyperparameter tuning")
 
@@ -118,7 +118,7 @@ def train_rfc_classifier(
 
 # Training function for XGBoost Classifier
 def train_xgboost_classifier(
-    X: pd.DataFrame, y: pd.Series, model_id: str
+    X: pd.DataFrame, y: pd.Series, model_id: str = None
 ) -> tuple[ClassifierMixin, ClassifierMetadata]:
     logging.info("Start training a xgboost classifier with hyperparameter tuning")
 
@@ -167,7 +167,7 @@ def train_xgboost_classifier(
 
 # Training function for LightGBM Classifier
 def train_lgbm_classifier(
-    X: pd.DataFrame, y: pd.Series, model_id: str
+    X: pd.DataFrame, y: pd.Series, model_id: str = None
 ) -> tuple[ClassifierMixin, ClassifierMetadata]:
     logging.info("Start training a xgboost classifier with hyperparameter tuning")
 
