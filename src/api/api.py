@@ -23,7 +23,7 @@ app = FastAPI()
 async def list_models():
     return list_models_ids()
 
-#TO BE FINISHED: FUNCTION IN dsba.model_registry
+
 @app.get("/datasets/")
 async def list_available_datasets():
     return list_datasets()
@@ -31,23 +31,31 @@ async def list_available_datasets():
 
 
 @app.api_route("/predict/", methods=["GET", "POST"])
-async def predict(query: str, model_id: str):
+async def predict(model_id: str, query: str = None, dataset_name: str = None):
     """
-    Predict the target column of a record using a model.
-    The query should be a json string representing a record.
+    Predict the target column of a record using a model with a dataset (dataset_name) 
+    (idea to develop in the future: with a unique record (query))
     """
-    # This function is a bit naive and focuses on the logic.
-    # To make it more production-ready you would want to validate the input, manage authentication,
-    # process the various possible errors and raise an appropriate HTTP exception, etc.
     try:
-        record = json.loads(query)
         model = load_model(model_id)
         metadata = load_model_metadata(model_id)
-        prediction = classify_record(model, record, metadata.target_column)
-        return {"prediction": prediction}
+
+        dataset_path = os.path.join("data", dataset_name)
+
+        df = pd.read_csv(dataset_path)
+
+        predictions = model.predict(df.drop(columns=[metadata.target_column]))
+        return {"type": "dataset", "predictions": predictions.tolist()}
+
+ 
     except Exception as e:
         # We do want users to be able to see the exception message in the response
         # FastAPI will by default block the Exception and send a 500 status code
         # (In the HTTP protocol, a 500 status code just means "Internal Server Error" aka "Something went wrong but we're not going to tell you what")
         # So we raise an HTTPException that contains the same details as the original Exception and FastAPI will send to the client.
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("path_to_some_empty_icon.ico")

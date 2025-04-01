@@ -35,13 +35,6 @@ def list_models_ids() -> list[str]:
     return models_ids
 
 
-#creation of function which lists the datasets
-# DATASET_DIR = "data"
-# def list_datasets():
-#         datasets = [f for f in os.listdir(DATASET_DIR) if f.endswith(".csv")]
-#         return datasets
-
-
 def load_model(model_id) -> BaseEstimator:
     model_path = _get_model_path(model_id)
     return _load_model_from_path(model_path)
@@ -114,3 +107,29 @@ def _get_absolute_path(path: str | Path) -> Path:
 
 def _remove_file_extension(file_name: str) -> str:
     return os.path.splitext(file_name)[0]
+
+
+
+
+
+#creation of function which lists the datasets
+def _get_datasets_dir() -> Path:
+    """
+    Similar to _get_models_dir
+    """
+    DSBA_DATASETS_ROOT_PATH = os.getenv("DSBA_DATASETS_ROOT_PATH", "data")
+    datasets_dir = _get_absolute_path(DSBA_DATASETS_ROOT_PATH)
+    
+    if not datasets_dir.exists():
+        raise ValueError(f"Parent directory for datasets does not exist, creating it at {datasets_dir}")
+
+    return datasets_dir
+
+def _list_csv_files(path: Path) -> list[str]:
+    """Similar to _list_pickle_files"""
+    return [_remove_file_extension(f.name) for f in path.glob("*.csv")]
+
+def list_datasets() -> list[str]:
+    datasets_dir = _get_datasets_dir()
+    return _list_csv_files(datasets_dir)
+
