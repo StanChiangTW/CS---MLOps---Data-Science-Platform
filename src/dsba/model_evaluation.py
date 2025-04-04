@@ -74,9 +74,42 @@ def add_to_results(df, model_name, cv_metrics, test_metrics):
     
     return pd.concat([df, new_rows], ignore_index=True)
 
+def plot_model_comparison(results_df: pd.DataFrame, y_axis_start: float = 0.4):
+    # Set style for Seaborn plots
+    logging.info("Generating model comparison plots..")
+    sns.set_style("whitegrid")
+    
+    # Plot Accuracy, Precision, Recall, F1-Score, and FOR for each model
+    metrics_plot = ["accuracy", "precision", "recall", "f1_score"]
+    metrics_titles = ["Accuracy", "Precision", "Recall", "F1 Score"]
+    
+    # Set up the figure for subplots
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    axes = axes.flatten()
+    
+    for i, (metric, metric_title) in enumerate(zip(metrics_plot, metrics_titles)):
+        sns.barplot(
+            data=results_df,
+            x="Model",
+            y=metric,
+            hue="Dataset",
+            ax=axes[i],
+            palette="muted"
+        )
+        axes[i].set_title(f"Model Comparison: {metric}")
+        axes[i].set_ylabel(metric)
+        axes[i].set_xlabel("Model")
+        axes[i].legend(title="Dataset", loc="lower right")
+    
+        axes[i].set_ylim(y_axis_start, axes[i].get_ylim()[1]) #here to adjust vertical axis : 0; 0,4 or other value
+    
+    # Adjust spacing between plots
+    plt.tight_layout()
+    plt.show()
+
 
 def evaluate_models(models, X_train, y_train, X_test, y_test):
-    """Evaluates multiple models and stores results in a DataFrame."""
+
     results_df = pd.DataFrame(columns=["Dataset", "Model", "accuracy", "precision", "recall", "f1_score"])
 
     for model_name, model in models.items():
@@ -89,12 +122,18 @@ def evaluate_models(models, X_train, y_train, X_test, y_test):
 
     # Display and plot results
     print(results_df)
-    # plot_model_comparison(results_df)
+    plot_model_comparison(results_df)
 
     return results_df
 
 
-
+#models = {
+#    "SVM": best_model_svm,
+#    "Random Forest": best_model_rfc,
+#    "XGBoost": best_model_xgb,
+#    "LGBM": best_model_lgbm
+#}
+#results_df = evaluate_models(models, X_train, y_train, X_test, y_test)
 
 
 
