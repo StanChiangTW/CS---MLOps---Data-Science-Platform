@@ -153,3 +153,5 @@ def plot_classification_metrics(result: ClassifierEvaluationResult) -> plt.Figur
     ax.set_title("Classification Metrics")
     ax.set_ylabel("Score")
     return fig
+
+    '''
