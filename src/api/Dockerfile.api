@@ -1,5 +1,6 @@
 # Base Python image (Python 3.9.6)
-FROM python:3.9.6
+FROM python:3.12.4
+
 
 # Set the working directory in the container
 WORKDIR /app
