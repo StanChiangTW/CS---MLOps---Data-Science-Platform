@@ -8,11 +8,14 @@ from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
+    make_scorer
 )
 import matplotlib.pyplot as plt
 import seaborn as sns
-from dsba.preprocessing import preprocess_dataframe, split_features_and_target
 from statistics import mean
+import logging
+from typing import Any
+from sklearn.model_selection import cross_val_score 
 
 
 @dataclass
@@ -105,7 +108,8 @@ def plot_model_comparison(results_df: pd.DataFrame, y_axis_start: float = 0.4):
     
     # Adjust spacing between plots
     plt.tight_layout()
-    plt.show()
+    
+    return fig
 
 
 def evaluate_models(models, X_train, y_train, X_test, y_test):
@@ -120,11 +124,11 @@ def evaluate_models(models, X_train, y_train, X_test, y_test):
 
     results_df = results_df.sort_values(by=["Dataset"], ignore_index=True)
 
-    # Display and plot results
-    print(results_df)
-    plot_model_comparison(results_df)
+    
+    
+    
 
-    return results_df
+    return results_df, plot_model_comparison(results_df)
 
 
 #models = {
