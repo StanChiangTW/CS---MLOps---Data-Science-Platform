@@ -140,28 +140,6 @@ src/
 ```
 This is the main source directory where the code resides.
 
-
-#### API
-An API is provided, it allows to interact with models. You can start the API by running:
-```bash
-uvicorn src.api.api:app --reload
-```
-
-Dockerized API
-To run the API in a Docker container, follow these steps:
-1. Build the Docker image:
-```bash
-docker build -t aryap25/mlops_docker:latest
-```
-2. Run the Docker container:
-```bash
-docker run -p 8000:8000 aryap25/mlops_docker:latest
-```
-The API will be available at http://127.0.0.1:8000/
-
-Note: Ensure Docker is installed on your machine.
-
-
 #### CLI
 
 Not used in the MLOps project, normally it's used to list models registered on your system:
@@ -175,6 +153,62 @@ Use a model to predict on a file:
 ```bash
 src/cli/dsba_cli predict --input /path/to/your/data/file.csv --output /path/to/your/output/file.csv --model-id your_model_id
 ```
+
+### API
+An API is provided, it allows to interact with models. You can start the API by running:
+```bash
+uvicorn api:app --reload
+```
+
+Dockerized API
+To run the API in a Docker container, follow these steps:
+1. Build the Docker image:
+```bash
+docker build -f Dockerfile.api -t fastapi .
+```
+2. Run the Docker container:
+```bash
+docker run -d -p 8000:80 fastapi
+```
+The API will be available at http://127.0.0.1:8000/
+
+Note: Ensure Docker is installed on your machine.
+3. Tag the image 
+```bash
+docker tag fastapi stanchiangtw/fastapi
+```
+
+Note: Ensure Docker Desktop is logged in by using
+```bash
+docker login
+```
+   
+4. Push the tag image to Docker Hub
+```bash
+docker push stanchiangtw/fastapi:latest
+```
+
+
+AWS ECS & EC2
+We successfully implemented the deployment and scaling of Docker containers on AWS ECS. The process involved the following steps:
+- Creating an ECS cluster
+- Defining a Task Definition
+- Configuring a Security Group
+- Setting up a service
+- Accessing the running service
+
+The API was successfully running at http://13.37.241.233:8000/.
+
+However, the service quickly exceeded the free tier quota, resulting in costs ($12.46). Before stopping the service, we took a screenshot to document the progress made.
+![GitHub Logo](https://drive.google.com/file/d/1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55/view?usp=sharing)
+
+
+
+### Dockerfile
+The .api file includes all the necessary instructions, organized in a way that ensures Docker executes them correctly.
+
+### Requirements
+The .txt file contains all the necessary Python packages required to process the data, train the model, and run the API.
 
 
 #### DSBA
