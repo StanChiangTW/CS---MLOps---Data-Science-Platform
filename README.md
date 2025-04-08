@@ -200,7 +200,7 @@ We successfully implemented the deployment and scaling of Docker containers on A
 The API was successfully running at http://13.37.241.233:8000/.
 
 However, the service quickly exceeded the free tier quota, resulting in costs ($12.46). Before stopping the service, we took a screenshot to document the progress made.
-![GitHub Logo](https://drive.google.com/file/d/1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55/view?usp=sharing)
+![GitHub Logo]([https://drive.google.com/file/d/1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55/view?usp=sharing](https://drive.google.com/uc?export=view&id=1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55))
 
 
 
