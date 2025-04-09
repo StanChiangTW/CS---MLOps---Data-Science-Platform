@@ -9,6 +9,11 @@ import io
 from pathlib import Path
 from typing import Optional
 import sys
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi import Request
+import matplotlib.pyplot as plt
+from fastapi.templating import Jinja2Templates
 import numpy
 sys.modules['numpy._core'] = numpy.core
 
@@ -18,8 +23,6 @@ sys.modules['numpy._core'] = numpy.core
 
 df = load_csv("data/BankChurners.csv")
 X_train, X_test, y_train, y_test = preprocess_data("data/BankChurners.csv")
-
-model_list = ["lgbm_model", "rf_model", "xgb_model", "svm_model"]
 
 lgbm_model = joblib.load('models/lgbm_model.pkl')
 rf_model = joblib.load('models/rf_model.pkl')
@@ -33,10 +36,10 @@ models = {
     "SVM": svm_model
 }
 
-# model_comparison is matlplotlib fig object
 results, model_comparison = evaluate_models(models, X_train, y_train, X_test, y_test)
 
-# Need HTML to show the plot for model_comparison
+png_path = "static/model_comparison.png"
+model_comparison.savefig(png_path)
 
 
 
@@ -65,6 +68,9 @@ for record in results_dict:
 
 app = FastAPI()
 
+template = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 async def tmp_save_file(upload_file: UploadFile) -> Path:
     try:
         temp_dir = Path("temp_uploads")
@@ -87,29 +93,31 @@ async def tmp_save_file(upload_file: UploadFile) -> Path:
 
 
 @app.get("/")
-async def read_root():
-    return {
-        "Welcome": "ML Model + FastApi",
-        "Dataset": data_info,
-        "Feature List": columns_info,
-        "Model Info": model_info,
-        "Model Evaluation": metrics_summary
+async def read_root(request: Request):
+    return template.TemplateResponse("dashboard.html", {
+        "request": request,
+        "data_info": data_info,
+        "columns_info": columns_info,
+        "model_info": model_info,
+        "metrics_summary": metrics_summary,
+        "plot_image_path": "static/model_comparison.png"
 
-    }
+    })
 
 @app.post("/upload-and-evaluate/")
-async def upload_and_evaluate(file: Optional[UploadFile] = None):
+async def upload_and_evaluate(request: Request, file: Optional[UploadFile] = None):
     try:
 
         if file is None:
-            return {
-                "Welcome": "ML Model + FastApi",
-                "Message": "Default Dataset",
-                "Dataset": data_info,
-                "Feature List": columns_info,
-                "Model Info": model_info,
-                "Model Evaluation": metrics_summary
-                }
+            return template.TemplateResponse("dashboard.html", {
+                "request": request,
+                "data_info": data_info,
+                "columns_info": columns_info,
+                "model_info": model_info,
+                "metrics_summary": metrics_summary,
+                 "plot_image_path": "static/model_comparison.png"
+
+            })
         
 
         # Need HTML to design the layout to upload the file
@@ -121,6 +129,9 @@ async def upload_and_evaluate(file: Optional[UploadFile] = None):
         
         
         results_upload, model_comparison_upload = evaluate_models(models, X_train_upload, X_test_upload, y_train_upload, y_test_upload )
+
+        png_path_upload = "static/model_comparison_upload.png"
+        model_comparison_upload.savefig(png_path_upload)  
 
         # Need HTML to show the plot for model_comparison_upload
 
@@ -153,17 +164,15 @@ async def upload_and_evaluate(file: Optional[UploadFile] = None):
                 "f1_score": record["f1_score"]
             }
         
-        return {
-            "Welcome": "ML Model + FastApi",
-            "Message": "Evaluation using the uploaded dataset",
-            "Dataset": data_info_upload,
-            "Feature List": columns_info_upload,
-            "Model Info": model_info_upload,
-            "Model Evaluation": metrics_summary_upload
+        return template.TemplateResponse("dashboard.html", {
+            "request": request,
+            "data_info": data_info_upload,
+            "columns_info": columns_info_upload,
+            "model_info": model_info_upload,
+            "metrics_summary": metrics_summary_upload,
+            "plot_image_path": "static/model_comparison_upload.png"
 
-
-            
-        }
+    })
 
     except ValueError as e:
         return {"error": str(e)}
@@ -171,4 +180,3 @@ async def upload_and_evaluate(file: Optional[UploadFile] = None):
     except Exception as e:
         return {"error": f"Unexpected Error: {str(e)}"}
     
-
