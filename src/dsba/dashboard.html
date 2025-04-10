@@ -52,6 +52,27 @@
       font-weight: 600;
       margin-bottom: 1rem;
     }
+    .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+  }
+  .data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  .data-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  .data-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  .data-table tr:hover {
+    background-color: #f1f1f1;
+  }
   </style>
 </head>
 <body>
@@ -61,11 +82,24 @@
     <div class="section">
       <div class="section-title">Data Preview</div>
       <div id="data_preview">
-        <ul>
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for key in data_info["Show the first 5 records of the dataset"][0].keys() %}
+                <th>{{ key }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
             {% for row in data_info["Show the first 5 records of the dataset"] %}
-                <li>{{ row }}</li>
+              <tr>
+                {% for value in row.values() %}
+                  <td>{{ value }}</td>
+                {% endfor %}
+              </tr>
             {% endfor %}
-        </ul>
+          </tbody>
+        </table>
       </div>
     </div>
 
