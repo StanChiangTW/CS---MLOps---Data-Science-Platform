@@ -1,10 +1,9 @@
 # DSBA Platform
 
-A toy MLOps Platform for educational purposes
+A toy MLOps Project
 
 ## Project Structure
 
-This project has a fairly standard structure (but it is still adapted to be simplified compared to a slightly more typical structure):
 
 - a `pyproject.toml` file contains the project metadata, including the dependencies. It is common to see a "setup.py" file in Python projects but we use this more modern approach to define the project metadata.
 - The `src` folder contains the code code (dsba) as well as the code for the CLI, the API, the web app, the notebooks, as well as the Dockerfiles.
@@ -98,9 +97,52 @@ For windows, something of the sort may work:
 set DSBA_MODELS_ROOT_PATH="C:\path\to\your\models"
 ```
 
-## CLI
 
-List models registered on your system:
+
+
+
+# MLOps student project
+This project aimed to create an interface for a bank employees that allows them to choose a prediction model, a customer dataset, and then provide a result on whether customers will churn or not.
+
+To do this, we based our work on a machine learning project on bank churners that one of us had previously created. This project used the dataset of a kaggle challenge available at :  https://www.kaggle.com/datasets/thedevastator/predicting-credit-card-customer-attrition-with-m 
+
+
+## Important Folders and Files
+
+### Data
+
+```bash
+data/
+```
+
+This contains:
+- the original `BankChurners.csv` file of the Kaggle challenge used for the original ML project
+- the `X_test.csv` and the `y_test.csv` files created after the preprocessing of the original dataset, this files are the ones used for the rest of the MLOps project
+
+
+### Models
+
+```bash
+models/
+```
+
+This contains the different models trained and available to predict results. The 4 models are :
+- `lgbm_model.pkl`
+- `rf_model.pkl`
+- `svm_model.pkl`
+- `xgb_model.pkl`
+
+
+### Src
+
+```bash
+src/
+```
+This is the main source directory where the code resides.
+
+#### CLI
+
+Not used in the MLOps project, normally it's used to list models registered on your system:
 
 ```bash
 src/cli/dsba_cli list
@@ -112,17 +154,75 @@ Use a model to predict on a file:
 src/cli/dsba_cli predict --input /path/to/your/data/file.csv --output /path/to/your/output/file.csv --model-id your_model_id
 ```
 
-### Notebook
-
-...
-
 ### API
+An API is provided, it allows to interact with models. You can start the API by running:
+```bash
+uvicorn api:app --reload
+```
 
-...
+Dockerized API
+To run the API in a Docker container, follow these steps:
+1. Build the Docker image:
+```bash
+docker build -f Dockerfile.api -t fastapi .
+```
+2. Run the Docker container:
+```bash
+docker run -d -p 8000:80 fastapi
+```
+The API will be available at http://127.0.0.1:8000/
 
-### Dockerized API
+Note: Ensure Docker is installed on your machine.
+3. Tag the image 
+```bash
+docker tag fastapi stanchiangtw/fastapi
+```
 
-...
+Note: Ensure Docker Desktop is logged in by using
+```bash
+docker login
+```
+   
+4. Push the tag image to Docker Hub
+```bash
+docker push stanchiangtw/fastapi:latest
+```
 
-### REMARKS
-remove extra preprocessing files 
+
+AWS ECS & EC2
+We successfully implemented the deployment and scaling of Docker containers on AWS ECS. The process involved the following steps:
+- Creating an ECS cluster
+- Defining a Task Definition
+- Configuring a Security Group
+- Setting up a service
+- Accessing the running service
+
+The API was successfully running at http://13.37.241.233:8000/.
+
+However, the service quickly exceeded the free tier quota, resulting in costs ($12.46). Before stopping the service, we took a screenshot to document the progress made.
+![](https://drive.google.com/uc?export=view&id=1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55)
+
+
+
+
+### Dockerfile
+The .api file includes all the necessary instructions, organized in a way that ensures Docker executes them correctly.
+
+### Requirements
+The .txt file contains all the necessary Python packages required to process the data, train the model, and run the API.
+
+
+#### DSBA
+This contains the core functionality of the MLOps project, including model handling, data preprocessing, and utilities for training and predicting.
+
+
+
+#### Notebooks
+This contains:
+- `model_training_example.ipynb` the original example of Notebook of the MLOps platform project
+- `Bank_MLOps.ipynb` the notebook of an ML project from which we used it for our MLOps project. The original code from the ML project has not been modified; it may contain some elements from LLM. To use the notebook, navigate to the `notebooks/` folder and open the file. You can use the provided utilities to train models, preprocess data, and evaluate performance.
+
+
+
+## REMARKS
+No remarks
