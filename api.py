@@ -43,8 +43,9 @@ model_comparison.savefig(png_path)
 
 
 
-data_info = {"Show the first 5 records of the dataset": df.iloc[:5].to_dict(orient="records")}
-columns_info = {"Show the list of the columns": df.columns.tolist()}
+data_info =  df.iloc[:5].to_html(classes='table table-striped table-bordered', index=False)
+columns_df = pd.DataFrame({'Column Name': df.columns.tolist()})
+columns_info = columns_df.to_html(classes='table table-striped table-bordered', index=False)
 model_info = {"Show the model info": {}}
 for model_name, model in models.items():
     model_info["Show the model info"][model_name] = model.__class__.__name__
@@ -135,12 +136,11 @@ async def upload_and_evaluate(request: Request, file: Optional[UploadFile] = Non
 
         # Need HTML to show the plot for model_comparison_upload
 
-        data_upload = df_upload.iloc[:5].to_dict(orient="records") # Over 5 records, the layout will be messy
+        data_upload = df_upload.iloc[:5].to_html(classes='table table-striped table-bordered', index=False)# Over 5 records, the layout will be messy
         
-        data_info_upload = {"Show the first 5 records of the Uploaded dataset": data_upload}
         
-        columns_upload = df_upload.columns.tolist()
-        columns_info_upload = {"Show the list of the columns": columns_upload}
+        columns_upload_df = pd.DataFrame({'Column Name': df_upload.columns.tolist()})
+        columns_info_upload = columns_upload_df.to_html(classes='table table-striped table-bordered', index=False)
         
         model_info_upload = {"Show the model info": {}}
         for model_name, model in models.items():
@@ -166,7 +166,7 @@ async def upload_and_evaluate(request: Request, file: Optional[UploadFile] = Non
         
         return template.TemplateResponse("dashboard.html", {
             "request": request,
-            "data_info": data_info_upload,
+            "data_info": data_upload,
             "columns_info": columns_info_upload,
             "model_info": model_info_upload,
             "metrics_summary": metrics_summary_upload,
