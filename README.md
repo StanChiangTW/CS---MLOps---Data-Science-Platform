@@ -203,6 +203,14 @@ However, the service quickly exceeded the free tier quota, resulting in costs ($
 ![](https://drive.google.com/uc?export=view&id=1YI7dOU-cK-AJIUZxjXoJGsSZiGhT2f55)
 
 
+### Templates
+The `templates/` directory contains HTML templates used for rendering web views in our application. The main file `dashboard.html` serves as the user interface for our ML model evaluation dashboard.
+[](https://drive.google.com/file/d/1Qn6xwJqMqwlLxW2gfUpax25rowAYeeJ6/view?usp=sharing)
+
+
+
+### static
+The `static/` directory stores static resources like generated plots (.png files). The image is served directly to the client browser and don't change during runtime. The visualization image created during model evaluation is stored here, allowing it to be displayed in the dashboard.
 
 
 ### Dockerfile
