@@ -205,8 +205,7 @@ However, the service quickly exceeded the free tier quota, resulting in costs ($
 
 ### Templates
 The `templates/` directory contains HTML templates used for rendering web views in our application. The main file `dashboard.html` serves as the user interface for our ML model evaluation dashboard.
-[](https://drive.google.com/file/d/1Qn6xwJqMqwlLxW2gfUpax25rowAYeeJ6/view?usp=sharing)
-
+![](https://drive.google.com/uc?export=view&id=1YeNfucGTlaxTsHB8R3UtQe_jKRBf13IC)
 
 
 ### static
