@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,13 +14,17 @@
       padding: 2rem;
       color: #333;
     }
-    h1, h2 {
+
+    h1,
+    h2 {
       color: #1a202c;
     }
+
     .dashboard {
       max-width: 1200px;
       margin: auto;
     }
+
     .section {
       background: white;
       border-radius: 12px;
@@ -27,33 +32,67 @@
       margin-bottom: 2rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
     }
-    th, td {
+
+    th,
+    td {
       text-align: left;
       padding: 0.75rem;
       border-bottom: 1px solid #e2e8f0;
     }
+
     th {
       background-color: #edf2f7;
       font-weight: 600;
     }
+
     img {
       max-width: 100%;
       height: auto;
       border-radius: 8px;
       margin-top: 1rem;
     }
+
     .section-title {
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 1rem;
     }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .data-table th,
+    .data-table td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .data-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .data-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .data-table tr:hover {
+      background-color: #f1f1f1;
+    }
   </style>
 </head>
+
 <body>
   <div class="dashboard">
     <h1>ML Model Evaluation Dashboard</h1>
@@ -61,21 +100,39 @@
     <div class="section">
       <div class="section-title">Data Preview</div>
       <div id="data_preview">
-        <ul>
+        <!-- <ul>
+          {% for row in data_info["Show the first 5 records of the dataset"] %}
+          <li>{{ row }}</li>
+          {% endfor %}
+        </ul> -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for key in data_info["Show the first 5 records of the dataset"][0].keys() %}
+              <th>{{ key }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
             {% for row in data_info["Show the first 5 records of the dataset"] %}
-                <li>{{ row }}</li>
+            <tr>
+              {% for value in row.values() %}
+              <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
             {% endfor %}
-        </ul>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div class="section">
+    <!-- <div class="section">
       <div class="section-title"> Model Information</div>
       <table id="model_info">
         <ul>
-            {% for name, model in model_info["Show the model info"].items() %}
-                <li>{{ name }}: {{ model }}</li>
-            {% endfor %}
+          {% for name, model in model_info["Show the model info"].items() %}
+          <li>{{ name }}: {{ model }}</li>
+          {% endfor %}
         </ul>
       </table>
     </div>
@@ -85,29 +142,64 @@
       <table id="metrics_summary">
         {% for model, metrics in metrics_summary.items() %}
         <h3>{{ model }}</h3>
-            <tr>
+        <tr>
+          <th>Dataset</th>
+          <th>Accuracy</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1 Score</th>
+        </tr>
+        {% for dataset_type, metric in metrics.items() %}
+        <tr>
+          <td>{{ dataset_type }}</td>
+          <td>{{ metric.accuracy }}</td>
+          <td>{{ metric.precision }}</td>
+          <td>{{ metric.recall }}</td>
+          <td>{{ metric.f1_score }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+      </table>
+    </div> -->
+    <div class="section">
+      <div class="section-title">Model Results</div>
+    
+      {% for name, model in model_info["Show the model info"].items() %}
+        <div class="model-block">
+          <h2>{{ name }}</h2>
+          <p><strong>Model Info:</strong> {{ model }}</p>
+    
+          <table class="metrics-table">
+            <thead>
+              <tr>
                 <th>Dataset</th>
                 <th>Accuracy</th>
                 <th>Precision</th>
                 <th>Recall</th>
                 <th>F1 Score</th>
-            </tr>
-            {% for dataset_type, metric in metrics.items() %}
-            <tr>
+              </tr>
+            </thead>
+            <tbody>
+              {% for dataset_type, metric in metrics_summary[name].items() %}
+              <tr>
                 <td>{{ dataset_type }}</td>
                 <td>{{ metric.accuracy }}</td>
                 <td>{{ metric.precision }}</td>
                 <td>{{ metric.recall }}</td>
                 <td>{{ metric.f1_score }}</td>
-            </tr>
-            {% endfor %}
-    {% endfor %}
-      </table>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <hr />
+      {% endfor %}
     </div>
-
+    
     <h2>📈 Model Comparison Plot</h2>
-    <img src="{{ plot_image_path }}" alt="Model Comparison" width="600"/>
-   
+    <img src="{{ plot_image_path }}" alt="Model Comparison" width="600" />
+
   </div>
 </body>
+
 </html>
