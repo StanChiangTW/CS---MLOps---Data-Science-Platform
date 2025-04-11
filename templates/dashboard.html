@@ -99,13 +99,13 @@
 
     <div class="section">
       <div class="section-title">Data Preview</div>
-      <div id="data_preview">
-        <!-- <ul>
+      <!-- <div id="data_preview"> -->
+      <!-- <ul>
           {% for row in data_info["Show the first 5 records of the dataset"] %}
           <li>{{ row }}</li>
           {% endfor %}
         </ul> -->
-        <table class="data-table">
+      <!-- <table class="data-table">
           <thead>
             <tr>
               {% for key in data_info["Show the first 5 records of the dataset"][0].keys() %}
@@ -123,6 +123,9 @@
             {% endfor %}
           </tbody>
         </table>
+      </div> -->
+      <div id="data_preview">
+        {{ data_info | safe }}
       </div>
     </div>
 
@@ -163,39 +166,39 @@
     </div> -->
     <div class="section">
       <div class="section-title">Model Results</div>
-    
+
       {% for name, model in model_info["Show the model info"].items() %}
-        <div class="model-block">
-          <h2>{{ name }}</h2>
-          <p><strong>Model Info:</strong> {{ model }}</p>
-    
-          <table class="metrics-table">
-            <thead>
-              <tr>
-                <th>Dataset</th>
-                <th>Accuracy</th>
-                <th>Precision</th>
-                <th>Recall</th>
-                <th>F1 Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for dataset_type, metric in metrics_summary[name].items() %}
-              <tr>
-                <td>{{ dataset_type }}</td>
-                <td>{{ metric.accuracy }}</td>
-                <td>{{ metric.precision }}</td>
-                <td>{{ metric.recall }}</td>
-                <td>{{ metric.f1_score }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <hr />
+      <div class="model-block">
+        <h2>{{ name }}</h2>
+        <p><strong>Model Info:</strong> {{ model }}</p>
+
+        <table class="metrics-table">
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dataset_type, metric in metrics_summary[name].items() %}
+            <tr>
+              <td>{{ dataset_type }}</td>
+              <td>{{ metric.accuracy }}</td>
+              <td>{{ metric.precision }}</td>
+              <td>{{ metric.recall }}</td>
+              <td>{{ metric.f1_score }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <hr />
       {% endfor %}
     </div>
-    
+
     <h2>📈 Model Comparison Plot</h2>
     <img src="{{ plot_image_path }}" alt="Model Comparison" width="600" />
 
